@@ -31,20 +31,30 @@ export const getLoggedUser = async (id) => {
     }
 };
 
-export const updatedUser = async (id, datas) => {
+export const updatedUser = async (id, datas, token) => {
     try {
-        const { data } = await axios.put(`${host}/update_user/${id}`,{datas});
+        const { data } = await axios.put(`${host}/update_user/${id}`, { datas }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return data;
     } catch (error) {
         return error.response.data.message;
     }
 };
 
-export const deleteUser = async (id) => {
+export const deleteUser = async (id, token) => {
     try {
-        const { data } = await axios.delete(`${host}/delete_user/${id}`);
+        const { data } = await axios.delete(`${host}/delete_user/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return data;
     } catch (error) {
         return error.response.data.message;
     }
 };
+
+

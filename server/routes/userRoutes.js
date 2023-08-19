@@ -1,4 +1,5 @@
 const { userRegistration, userLogin, getLoggedUser, updateUser, deleteUser } = require("../controllers/userController");
+const { authUser } = require("../middlewares/user-auth-middleware");
 
 const router = require("express").Router();
 
@@ -12,10 +13,10 @@ router.post("/user_login", userLogin);
 router.get("/get_logged_user/:id", getLoggedUser);
 
 //UPDATE_USER || PUT
-router.put("/update_user/:id", updateUser);
+router.put("/update_user/:id", authUser,updateUser);
 
 //DELETE_USER || DELETE
-router.delete("/delete_user/:id", deleteUser);
+router.delete("/delete_user/:id",authUser, deleteUser);
 
 
 module.exports = router;

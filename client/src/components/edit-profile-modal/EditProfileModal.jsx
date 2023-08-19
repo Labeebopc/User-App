@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useStyles } from './editProfileStyles';
 import { useSelector } from 'react-redux';
 import { updatedUser } from '../../services/userServices';
+import axios from 'axios';
 
 const EditProfileModal = ({
     handleOpenUpdateUserModal,
@@ -25,18 +26,19 @@ const EditProfileModal = ({
 
     const handleUploadImage = (e) => {
         const file = e.target.files[0];
-        const reader = new FileReader();
+        const formData = new FormData()
+        formData.append("file", file)
 
-        reader.onloadend = function (e) {
-            setUpdateUser({ ...updateUser, image: reader.result ? reader.result : loggedUser?.image });
-        };
+        formData.append("upload_preset", "voly1t6u")
+        axios.post(`https://api.cloudinary.com/v1_1/dxg5hfjvr/image/upload`, formData)
+            .then(res => setUpdateUser({ ...updateUser, image: res?.data.secure_url ? res?.data.secure_url : loggedUser?.image }))
 
-        reader.readAsDataURL(file);
     }
 
+
     const handleUpdateUser = async () => {
-        let res = await updatedUser(loggedUser?._id, updateUser)
-        console.log(res,"up")
+        let res = await updatedUser(loggedUser?._id, updateUser, user?.token)
+        console.log(res, "up")
         if (res?.status) {
             toast.success(res?.message)
             getUser()

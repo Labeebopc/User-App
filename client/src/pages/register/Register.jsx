@@ -6,10 +6,15 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Logo from "../../assets/logo.png"
 import { userRegistration } from '../../services/userServices';
+import axios from 'axios';
 
 const Register = () => {
     const classes = useStyles()
     const navigate = useNavigate()
+
+    //Cloudinary 
+    const presetKey = process.env.PRESET_KEY;
+    const cloudName = process.env.CLOUD_NAME;
 
     const [newUserDetails, setNewUserDetails] = useState({
         name: "",
@@ -19,15 +24,27 @@ const Register = () => {
         address: ""
     })
 
+    // const handleUploadImage = (e) => {
+
+    //     const file = e.target.files[0];
+    //     const reader = new FileReader();
+
+    //     reader.onloadend = function (e) {
+    //         setNewUserDetails({ ...newUserDetails, image: reader.result });
+    //     };
+
+    //     reader.readAsDataURL(file);
+    // }
+
     const handleUploadImage = (e) => {
         const file = e.target.files[0];
-        const reader = new FileReader();
+        const formData = new FormData()
+        formData.append("file", file)
 
-        reader.onloadend = function (e) {
-            setNewUserDetails({ ...newUserDetails, image: reader.result });
-        };
+        formData.append("upload_preset", "voly1t6u")
+         axios.post(`https://api.cloudinary.com/v1_1/dxg5hfjvr/image/upload`, formData)
+            .then(res => setNewUserDetails({ ...newUserDetails, image: res?.data?.secure_url }))
 
-        reader.readAsDataURL(file);
     }
 
     const handleRegister = async () => {
@@ -37,6 +54,7 @@ const Register = () => {
         else {
             // console.log(newUserDetails)
             let res = await userRegistration(newUserDetails)
+            console.log(res)
             if (res?.status) {
                 toast.success(res.message)
                 navigate("/login")

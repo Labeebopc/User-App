@@ -26,7 +26,7 @@ const Dashboard = () => {
     const handleUpdateUserBtn = () => {
         handleOpenUpdateUserModal()
     }
-
+    console.log(loggedUser)
     useEffect(() => {
         getUser()
     }, [])
@@ -45,7 +45,7 @@ const Dashboard = () => {
     }
 
     const handleDeleteUser = async () => {
-        let res = await deleteUser(user.existingUser.id)
+        let res = await deleteUser(user.existingUser.id, user.token)
         if (res?.status) {
             toast.success(res?.message)
             navigate("/login")
