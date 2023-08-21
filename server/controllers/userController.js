@@ -91,9 +91,11 @@ exports.getLoggedUser = asyncHandler(async (req, res) => {
 //@access Private
 exports.updateUser = asyncHandler(async (req, res) => {
     const { id } = req.params
+    console.log(req.body,"body")
     try {
         
-        const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true })
+        const updatedUser = await User.findByIdAndUpdate(id, {...req.body}, { new: true })
+        
         return res.status(201).json({ status: true, updatedUser, message: "User updated" })
 
     } catch (error) {

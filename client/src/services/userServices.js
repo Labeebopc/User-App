@@ -33,7 +33,7 @@ export const getLoggedUser = async (id) => {
 
 export const updatedUser = async (id, datas, token) => {
     try {
-        const { data } = await axios.put(`${host}/update_user/${id}`, { datas }, {
+        const { data } = await axios.put(`${host}/update_user/${id}`, datas , {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
